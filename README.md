@@ -8,7 +8,8 @@ needed:
 - 1 x ESP32 Dev Board
 - breadboard, some wires etc.
 
-define GPIOs, Creadentials, Brigthness and Timezones in the code.
+define GPIOs, Credentials, Brigthness and Timezones in the code.
 
 
 ![MatrixClock](https://github.com/schreibfaul1/ESP32-LED-Matrix-Clock/blob/master/ESP32_MatrixClock.jpg)
+![Schematic](https://github.com/schreibfaul1/ESP32-LED-Matrix-Clock/blob/master/ESP32_MatrixClock_schematic.JPG)
