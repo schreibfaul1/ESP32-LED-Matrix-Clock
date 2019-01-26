@@ -3,8 +3,8 @@
 //*********************************************************************************************************
 //
 // first release on 01/2019
-// updated on    21.01.2019
-// Version 1.1.0
+// updated on    26.01.2019
+// Version 1.1.1
 //
 //
 // THE SOFTWARE IS PROVIDED "AS IS" FOR PRIVATE USE ONLY, IT IS NOT FOR COMMERCIAL USE IN WHOLE OR PART OR CONCEPT.
@@ -43,7 +43,7 @@
 //#define UDTXT        "    Добрый день!   "
 
 // other defines --------------------------------------
-#define BRIGHTNESS   7     // values can be 0...15
+#define BRIGHTNESS   0     // values can be 0...15
 #define anzMAX       6     // number of cascaded MAX7219
 #define FORMAT24H          // if not defined time will be displayed in 12h fromat
 #define SCROLLDOWN         // if not defined it scrolls up
@@ -879,7 +879,9 @@ void loop()
             std22 = std2;
             _f_tckr1s = false;
             if (rtc.getsecond() == 45) f_scroll_x1 = true; // scroll ddmmyy
+#ifdef UDTXT
             if (rtc.getsecond() == 25) f_scroll_x2 = true; // scroll userdefined text
+#endif //UDTXT
         } // end 1s
 // ----------------------------------------------
         if (_f_tckr50ms == true) {
