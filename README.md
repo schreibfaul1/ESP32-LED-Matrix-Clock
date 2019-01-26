@@ -11,5 +11,5 @@ needed:
 define GPIOs, Credentials, Brigthness and Timezones in the code.
 
 
-![MatrixClock](https://github.com/schreibfaul1/ESP32-LED-Matrix-Clock/blob/master/ESP32_MatrixClock.jpg)
+![MatrixClock](https://github.com/schreibfaul1/ESP32-LED-Matrix-Clock/blob/master/additional%20info/ESP32_MatrixClock.jpg)
 ![Schematic](https://github.com/schreibfaul1/ESP32-LED-Matrix-Clock/blob/master/additional%20info/ESP32_MatrixClock_schematic.JPG)
