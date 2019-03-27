@@ -3,8 +3,8 @@
 //*********************************************************************************************************
 //
 // first release on 01/2019
-// updated on    26.01.2019
-// Version 1.1.1
+// updated on    26.03.2019
+// Version 1.2.1
 //
 //
 // THE SOFTWARE IS PROVIDED "AS IS" FOR PRIVATE USE ONLY, IT IS NOT FOR COMMERCIAL USE IN WHOLE OR PART OR CONCEPT.
@@ -31,8 +31,8 @@
 #define MAX_CS        15
 
 // Credentials ----------------------------------------
-#define SSID         "mySSID";                      // Your WiFi credentials here
-#define PW           "myWiFiPassword";
+#define SSID         "Wolles-FRITZBOX";//"mySSID";                      // Your WiFi credentials here
+#define PW           "40441061073895958449";//"myWiFiPassword";
 
 // Timezone -------------------------------------------
 #define TZName       "CET-1CEST,M3.5.0,M10.5.0/3"   // Berlin (examples see at the bottom)
@@ -41,6 +41,11 @@
 
 // User defined text ----------------------------------
 //#define UDTXT        "    Добрый день!  ΕΠΙΧΡΥΣΟ  "
+
+// other displays -------------------------------------
+//#define REVERSE_HORIZONTAL                        // Parola, Generic and IC-Station
+//#define REVERSE_VERTICAL                          // IC-Station display
+//#define ROTATE_90                                 // Generic display
 
 // other defines --------------------------------------
 #define BRIGHTNESS   0     // values can be 0...15
@@ -674,9 +679,32 @@ void clear_Display()   //clear all
     }
 }
 //*********************************************************************************************************
+void rotate_90() // for Generic displays
+{
+    for (uint8_t k = anzMAX; k > 0; k--) {
+
+        uint8_t i, j, m, imask, jmask;
+        uint8_t tmp[8]={0,0,0,0,0,0,0,0};
+        for (  i = 0, imask = 0x01; i < 8; i++, imask <<= 1) {
+          for (j = 0, jmask = 0x01; j < 8; j++, jmask <<= 1) {
+            if (_LEDarr[k-1][i] & jmask) {
+              tmp[j] |= imask;
+            }
+          }
+        }
+        for(m=0; m<8; m++){
+            _LEDarr[k-1][m]=tmp[m];
+        }
+    }
+}
+//*********************************************************************************************************
 void refresh_display() //take info into LEDarr
 {
     uint8_t i, j;
+
+#ifdef ROTATE_90
+    rotate_90();
+#endif
 
     for (i = 0; i < 8; i++)     //8 rows
     {
@@ -684,7 +712,19 @@ void refresh_display() //take info into LEDarr
         delayMicroseconds(1);
         for (j = anzMAX; j > 0; j--) {
             SPI.write(i + 1);  //current row
+#ifdef REVERSE_HORIZONTAL
+            SPI.setBitOrder(LSBFIRST);      // bitorder for reverse columns
+#endif
+
+#ifdef REVERSE_VERTICAL
+            SPI.write(_LEDarr[j - 1][7-i]);
+#else
             SPI.write(_LEDarr[j - 1][i]);
+#endif
+
+#ifdef REVERSE_HORIZONTAL
+            SPI.setBitOrder(MSBFIRST);      // reset bitorder
+#endif
         }
         digitalWrite(MAX_CS, HIGH);
     }
