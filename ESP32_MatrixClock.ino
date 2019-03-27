@@ -31,8 +31,8 @@
 #define MAX_CS        15
 
 // Credentials ----------------------------------------
-#define SSID         "Wolles-FRITZBOX";//"mySSID";                      // Your WiFi credentials here
-#define PW           "40441061073895958449";//"myWiFiPassword";
+#define SSID         "mySSID";                      // Your WiFi credentials here
+#define PW           "myWiFiPassword";
 
 // Timezone -------------------------------------------
 #define TZName       "CET-1CEST,M3.5.0,M10.5.0/3"   // Berlin (examples see at the bottom)
