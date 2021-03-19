@@ -3,8 +3,8 @@
 //*********************************************************************************************************
 //
 // first release on 01/2019
-// updated on    26.03.2019
-// Version 1.2.1
+// updated on    19.03.2021
+// Version 1.2.2
 //
 //
 // THE SOFTWARE IS PROVIDED "AS IS" FOR PRIVATE USE ONLY, IT IS NOT FOR COMMERCIAL USE IN WHOLE OR PART OR CONCEPT.
@@ -62,6 +62,7 @@ uint8_t  _maxPosX = anzMAX * 8 - 1;      // calculated maxposition
 uint8_t  _LEDarr[anzMAX][8];             // character matrix to display (40*8)
 uint8_t  _helpArrMAX[anzMAX * 8];        // helperarray for chardecoding
 uint8_t  _helpArrPos[anzMAX * 8];        // helperarray pos of chardecoding
+uint8_t  _center = 0;                    // centers the time at AnzMax > 6 (in pixels)
 boolean  _f_tckr1s = false;
 boolean  _f_tckr50ms = false;
 boolean  _f_tckr24h = false;
@@ -867,6 +868,7 @@ void setup()
     }
     helpArr_init();
     max7219_init();
+    _center = ((anzMAX - 6) / 2) * 8;
     clear_Display();
     max7219_set_brightness(BRIGHTNESS);
     _f_rtc= rtc.begin(TZName);
@@ -894,7 +896,7 @@ void loop()
     _f_updown = false;
 #endif //SCROLLDOWN
 
-    _zPosX = _maxPosX;
+    _zPosX = _maxPosX -_center;
     _dPosX = -8;
     //  x=0; x1=0; x2=0;
 
@@ -989,14 +991,14 @@ void loop()
                 _zPosX++;
                 _dPosX++;
                 if (_dPosX == sctxtlen)  _zPosX = 0;
-                if (_zPosX == _maxPosX){f_scroll_x1 = false; _dPosX = -8;}
+                if (_zPosX + _center == _maxPosX){f_scroll_x1 = false; _dPosX = -8;}
             }
 //          -------------------------------------
             if (f_scroll_x2 == true) {
                 _zPosX++;
                 _dPosX++;
                 if (_dPosX == sctxtlen)  _zPosX = 0;
-                if (_zPosX == _maxPosX){f_scroll_x2 = false; _dPosX = -8;}
+                if (_zPosX + _center == _maxPosX){f_scroll_x2 = false; _dPosX = -8;}
             }
 //          -------------------------------------
             if (sc1 == 1) {
