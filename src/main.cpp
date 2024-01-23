@@ -604,7 +604,7 @@ uint8_t RTIME::getsecond(){ // 0...59
 //*********************************************************************************************************
 
 //objects
-RTIME rtc;
+RTIME* rtc;
 WiFiMulti wifiMulti;
 Ticker tckr;
 
@@ -873,7 +873,8 @@ void setup()
     _center = ((anzMAX - 6) / 2) * 8;
     clear_Display();
     max7219_set_brightness(BRIGHTNESS);
-    _f_rtc = rtc.begin(TZName);
+    rtc = new RTIME;
+    _f_rtc = rtc->begin(TZName);
     if(!_f_rtc) Serial.println("no timepacket received from ntp");
     tckr.attach(0.05, timer50ms);    // every 50 msec
 }
@@ -914,18 +915,23 @@ void loop()
     while (true) {
         if(_f_tckr24h == true) { //syncronisize RTC every day
             _f_tckr24h = false;
-            _f_rtc= rtc.begin(TZName);
-            if(_f_rtc==false) Serial.println("no timepacket received");
+            delete rtc;
+            rtc = new RTIME;
+            _f_rtc= rtc->begin(TZName);
+            if(_f_rtc==false){
+                Serial.println("no timepacket received");
+                ESP.restart();
+            }
         }
         if (_f_tckr1s == true)        // flag 1sek
         {
-            sek1 = (rtc.getsecond()%10);
-            sek2 = (rtc.getsecond()/10);
-            min1 = (rtc.getminute()%10);
-            min2 = (rtc.getminute()/10);
+            sek1 = (rtc->getsecond()%10);
+            sek2 = (rtc->getsecond()/10);
+            min1 = (rtc->getminute()%10);
+            min2 = (rtc->getminute()/10);
 #ifdef FORMAT24H
-            std1 = (rtc.gethour()%10);  // 24 hour format
-            std2 = (rtc.gethour()/10);
+            std1 = (rtc->gethour()%10);  // 24 hour format
+            std2 = (rtc->gethour()/10);
 #else
             uint8_t h=rtc.gethour();    // convert to 12 hour format
             if(h>12) h-=12;
@@ -980,7 +986,7 @@ void loop()
             std21 = std22;
             std22 = std2;
             _f_tckr1s = false;
-            if (rtc.getsecond() == 45) f_scroll_x1 = true; // scroll ddmmyy
+            if (rtc->getsecond() == 45) f_scroll_x1 = true; // scroll ddmmyy
 #ifdef UDTXT
             if (rtc.getsecond() == 25) f_scroll_x2 = true; // scroll userdefined text
 #endif //UDTXT
@@ -1051,10 +1057,10 @@ void loop()
 //          -------------------------------------
             if(f_scroll_x1){ // day month year
                 String txt= "   ";
-                txt += WD_arr[rtc.getweekday()] + " ";
-                txt += String(rtc.getday()) + ". ";
-                txt += M_arr[rtc.getmonth()] + " ";
-                txt += "20" + String(rtc.getyear()) + "   ";
+                txt += WD_arr[rtc->getweekday()] + " ";
+                txt += String(rtc->getday()) + ". ";
+                txt += M_arr[rtc->getmonth()] + " ";
+                txt += "20" + String(rtc->getyear()) + "   ";
                 sctxtlen=scrolltext(_dPosX, txt);
             }
 //          -------------------------------------
